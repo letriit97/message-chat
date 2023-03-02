@@ -1,0 +1,90 @@
+<!-- <div class="menu">
+  <div class="back"> <img src="https://i.imgur.com/DY6gND0.png" draggable="false" />
+  </div>
+  <div class="name">Chat Bot</div>
+</div>
+<div #messLoc id="mess">
+  <ol class="chat">
+    <div>
+      <ng-container *ngFor="let item of listRes">
+        <li class={{item.sender}}>
+          <div *ngIf="item.sender == 'self'" class="avatar"><img src="https://i.imgur.com/HYcn9xO.png"
+              draggable="false" /></div>
+          <div *ngIf="item.sender == 'other'" class="avatar"><img src="https://i.imgur.com/DY6gND0.png"
+              draggable="false" /></div>
+          <div class="msg">
+            <p>{{item.message}}</p>
+            <time>{{item.time | date:"dd/MM/yyyy hh:mm"}}</time>
+          </div>
+        </li>
+      </ng-container>
+      <li *ngIf="typing" class="other">
+        <div class="avatar"><img src="https://i.imgur.com/DY6gND0.png" draggable="false" /></div>
+        <div class="msg">
+          <div class="typing">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </li>
+    </div>
+
+  </ol>
+</div>
+<div>
+  <form (submit)="callAPI()">
+    <input class="textarea" type="text" name="e" placeholder="Type here!" [(ngModel)]="mess" />
+  </form>
+</div>
+
+<div></div> -->
+
+<div class="chat">
+  <div class="chat-title">
+    <h1>Fabio Ottaviani</h1>
+    <h2>Supah</h2>
+    <figure class="avatar">
+      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/156381/profile/profile-80.jpg" />
+    </figure>
+  </div>
+  <div class="messages">
+    <div #messageScroll class="messages-content mCustomScrollbar _mCS_1">
+      <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside">
+        <div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y">
+          <!-- MESSAGE -->
+          <div [class]="message.isBot ? 'message new' : 'message message-personal new'" *ngFor="let message of messageList">
+            <figure class="avatar" *ngIf="message.isBot">
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/156381/profile/profile-80.jpg">
+            </figure>
+            {{message.message}}
+            <div class="timestamp"> {{message.time| date: 'HH:mm'}}</div>
+          </div>
+          <!-- LOADING ANIMATION -->
+          <div class="message loading new" *ngIf="isBotType">
+            <figure class="avatar">
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/156381/profile/profile-80.jpg" />
+            </figure>
+            <span></span>
+          </div>
+          <div class="message message-personal loading new" *ngIf="isYouType">
+            <span></span>
+          </div>
+
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="message-box">
+    <input type="text" [(ngModel)]="mess" name="mess" class="message-input" placeholder="Type message..." (input)="onYouTyping($event)" (keyup)="onKeyUp()" (keydown.Enter)="onEnterPress($event)" />
+
+    <button type="submit" class="message-submit" (keydown)="onListenVoice($event)" (keyup)="onTurnOffVoice()">
+      <i class="fa fa-microphone"></i>
+    </button>
+  </div>
+
+</div>
+<div class="bg"></div>
