@@ -5,7 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
-import { NgxSpeechToTextModule } from './../../node_modules/ngx-speech-to-text'
 
 @NgModule({
   declarations: [
@@ -15,8 +14,7 @@ import { NgxSpeechToTextModule } from './../../node_modules/ngx-speech-to-text'
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule,
-    NgxSpeechToTextModule
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

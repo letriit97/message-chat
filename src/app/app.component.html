@@ -81,8 +81,12 @@
   <div class="message-box">
     <input type="text" [(ngModel)]="mess" name="mess" class="message-input" placeholder="Type message..." (input)="onYouTyping($event)" (keyup)="onKeyUp()" (keydown.Enter)="onEnterPress($event)" />
 
-    <button type="submit" class="message-submit" (keydown)="onListenVoice($event)" (keyup)="onTurnOffVoice()">
-      <i class="fa fa-microphone"></i>
+    <button *ngIf="mess == ''" type="button" class="message-submit" (click)="onListenVoice()">
+      <i [class]="isListen ? 'fa fa-microphone-slash' : 'fa fa-microphone'"></i>
+    </button>
+
+    <button *ngIf="mess != ''" type="button" class="message-submit" (click)="sendMessage()">
+      <i class="fa fa-paper-plane-o"></i>
     </button>
   </div>
 

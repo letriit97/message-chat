@@ -18,10 +18,11 @@ export interface ResultInterface {
 export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('messageScroll') messageScroll: any;
   mess: string = '';
-  oldMessage: string = '';
+  voiceMessage: string = '';
 
   isBotType: boolean = false;
   isYouType: boolean = false;
+  isListen: boolean = false;
   typingTimer: any = 0;                //timer identifier
   doneTypingInterval = 3000;
 
@@ -50,7 +51,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
   ngOnInit(): void {
     this.fakeData();
-
   }
   title = 'Chat';
 
@@ -157,23 +157,31 @@ export class AppComponent implements OnInit, AfterViewInit {
    * Ấn nút và giữ Mic
    * @memberof AppComponent
    */
-  onListenVoice(event: any) {
-    // Khởi tạo 
-    this.speechToTextService.init();
-    // bắt đầu nghe
-    this.speechToTextService.start();
+  onListenVoice() {
+    this.isListen = !this.isListen;
+    if (this.isListen) {
+      this.mess = '';
+      console.log('nhaans vao');
+      // Khởi tạo
+      this.speechToTextService.init();
+      // bắt đầu nghe
+      this.speechToTextService.start();
+
+      this.speechToTextService.responseText$.subscribe((result: string) => {
+        this.mess = result;
+      })
+    }
+    else this.speechToTextService._destroy();
+
   }
 
-  
+
   /**
    * Thả Mic
    * @memberof AppComponent
    */
   onTurnOffVoice() {
-    this.speechToTextService.responseText$.subscribe((result: string) => {
-      // Nhận text từ âm thanh
-      this.botAnswer(result);
-    })
+    console.log('Thar ra');
     // Huỷ nghe
     this.speechToTextService._destroy();
   }
