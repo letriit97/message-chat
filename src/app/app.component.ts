@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from './service/chat.service';
+import { NgxSpeechToTextService } from '../../node_modules/ngx-speech-to-text'
 
 export interface ResultInterface {
   message: string,
@@ -44,7 +45,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   typing: boolean = false;
   messageList: ResultInterface[] = [];
   scrollTo: Element | any;
-  constructor(private service: ChatService) { }
+  constructor(private service: ChatService, private speechToTextService: NgxSpeechToTextService) { }
   ngAfterViewInit(): void {
   }
   ngOnInit(): void {
@@ -105,13 +106,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     }, 0);
   }
 
-  botAnswer() {
+  botAnswer(message?: string) {
     this.isBotType = true;
     setTimeout(() => {
       this.isBotType = false;
       this.scollToBottom(100);
       this.messageList.push(<ResultInterface>{
-        message: this.messagesFake[Math.floor(Math.random() * (3 - 0 + 1) + 0)],
+        message: message != undefined ? message : this.messagesFake[Math.floor(Math.random() * (3 - 0 + 1) + 0)],
         sender: 'Bot',
         isBot: true,
         time: new Date()
@@ -119,7 +120,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.messageScroll.nativeElement.scrollTop = this.messageScroll.nativeElement.scrollHeight + 1000;
     }, 2000);
     this.scollToBottom(500);
-
   }
 
   scollToBottom(time: number) {
@@ -153,12 +153,29 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
 
+  /**
+   * Ấn nút và giữ Mic
+   * @memberof AppComponent
+   */
   onListenVoice(event: any) {
-
+    // Khởi tạo 
+    this.speechToTextService.init();
+    // bắt đầu nghe
+    this.speechToTextService.start();
   }
 
-  onTurnOffVoice(){
-    
+  
+  /**
+   * Thả Mic
+   * @memberof AppComponent
+   */
+  onTurnOffVoice() {
+    this.speechToTextService.responseText$.subscribe((result: string) => {
+      // Nhận text từ âm thanh
+      this.botAnswer(result);
+    })
+    // Huỷ nghe
+    this.speechToTextService._destroy();
   }
   //#endregion
 
