@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from './service/chat.service';
+import { NgxSpeechRecognitionService } from '../../node_modules/ngx-speech-recognition';
 
 export interface ResultInterface {
   message: string,
@@ -41,18 +42,18 @@ export class AppComponent implements OnInit, AfterViewInit {
     'Bye',
     ':)'
   ]
+  title = 'Chat';
   typing: boolean = false;
   messageList: ResultInterface[] = [];
   scrollTo: Element | any;
-  constructor(private service: ChatService) { }
+  constructor(private service: ChatService, private speakerService: NgxSpeechRecognitionService) { }
   ngAfterViewInit(): void {
   }
   ngOnInit(): void {
     this.fakeData();
-
   }
-  title = 'Chat';
 
+  //#region Methods
   callAPI() {
     let messToSend: string = this.mess;
     this.messageList.push({ message: this.mess, sender: 'self', time: new Date() })
@@ -74,19 +75,18 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   fakeData() {
     this.isBotType = true;
-
+    let messageVoice = <ResultInterface>{
+      message: 'Can I help you?',
+      sender: 'Bot',
+      isBot: true,
+      time: new Date()
+    };
     setTimeout(() => {
       this.isBotType = false;
-      this.messageList = [
-        <ResultInterface>{
-          message: 'Can I help you?',
-          sender: 'Bot',
-          isBot: true,
-          time: new Date()
-        },
-      ]
+      this.messageList.push(messageVoice)
     }, 1000);
 
+    this.speakerService.speak(messageVoice.message);
   }
 
   sendMessage() {
@@ -107,19 +107,21 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   botAnswer() {
     this.isBotType = true;
+    let messageVoice = '';
     setTimeout(() => {
       this.isBotType = false;
       this.scollToBottom(100);
-      this.messageList.push(<ResultInterface>{
-        message: this.messagesFake[Math.floor(Math.random() * (3 - 0 + 1) + 0)],
+      let answer = <ResultInterface>{
+        message: this.messagesFake[Math.floor(Math.random() * (13 - 0 + 1) + 0)],
         sender: 'Bot',
         isBot: true,
         time: new Date()
-      },)
+      };
+      messageVoice = answer.message;
+      this.messageList.push(answer)
       this.messageScroll.nativeElement.scrollTop = this.messageScroll.nativeElement.scrollHeight + 1000;
     }, 2000);
     this.scollToBottom(500);
-
   }
 
   scollToBottom(time: number) {
@@ -128,6 +130,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     }, time);
   }
 
+  speak(message: string) {
+  }
+
+  //#endregion
 
   //#region  Events 
   onYouTyping(event: any) {
@@ -157,8 +163,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   }
 
-  onTurnOffVoice(){
-    
+  onTurnOffVoice() {
+
   }
   //#endregion
 
